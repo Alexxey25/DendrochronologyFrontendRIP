@@ -1,0 +1,94 @@
+.construction-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 12px;
+  background: #fff;
+  transition: box-shadow 0.2s;
+  color: inherit;
+}
+
+.construction-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-link {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.card-image-placeholder {
+  background: #eee;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.card-uselife {
+  font-size: 14px;
+  color: var(--text-grey);
+  margin: 0;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-add-small {
+  padding: 6px 16px;
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #000;
+  transition: background 0.2s;
+  font-family: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-add-small:hover {
+  background: rgba(255, 180, 90, 1);
+}
+
+/* Подробнее — same base style, distinct accent */
+.btn-detail {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.btn-detail:hover {
+  background: rgba(140, 105, 55, 1);
+  color: #fff;
+}

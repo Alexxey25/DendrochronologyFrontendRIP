@@ -1,0 +1,37 @@
+.breadcrumbs {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 40px;
+  margin: 0;
+  background-color: #fff;
+  border-bottom: 1px solid #f0ebe4;
+}
+
+.breadcrumbs a {
+  color: rgba(162, 125, 75, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.breadcrumbs a:hover {
+  color: var(--accent);
+}
+
+.breadcrumbs li {
+  font-size: 14px;
+  color: rgba(162, 125, 75, 0.7);
+  cursor: default;
+}
+
+.breadcrumbs li:last-child {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.breadcrumbs .slash {
+  color: #ccc;
+  user-select: none;
+}

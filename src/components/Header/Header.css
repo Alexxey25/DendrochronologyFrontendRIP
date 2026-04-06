@@ -1,0 +1,101 @@
+.header-bar {
+  width: 100%;
+  min-height: 140px;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 40px 24px;
+  flex-shrink: 0;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-left: 100px;
+  flex-shrink: 0;
+}
+
+.prototype-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-bar .YURDIS_logo {
+  width: 50px;
+  height: 55px;
+}
+
+.header-bar .YURDIS_logo_text {
+  height: 24px;
+  width: auto;
+}
+
+.header-bar .search-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-left: 100px;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 50px 10px 20px;
+  border: 1px solid #000;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 16px;
+  color: var(--text-grey);
+  outline: none;
+  font-family: inherit;
+}
+
+.search-btn {
+  position: absolute;
+  right: 14px;
+  z-index: 2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.search-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Nav links added for lab navbar requirement */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-nav-link {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.header-nav-link:hover {
+  color: var(--accent-light);
+}
+
+.header-nav-link--active {
+  color: var(--accent-light);
+}
