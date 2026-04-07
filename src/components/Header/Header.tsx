@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import type { FormEvent } from 'react'
 import { ROUTES, ROUTE_LABELS } from '../../Routes'
 import yurdisLogo from '../../assets/yurdis-logo.svg'
@@ -12,7 +12,6 @@ interface HeaderProps {
 }
 
 export default function Header({ searchQuery, onQueryChange, onSearch }: HeaderProps) {
-  const location = useLocation()
   const showSearch = onSearch !== undefined
 
   const handleSubmit = (e: FormEvent) => {
@@ -23,23 +22,19 @@ export default function Header({ searchQuery, onQueryChange, onSearch }: HeaderP
   return (
     <div className="header-bar">
       <div className="header-logo">
-        <Link to={ROUTES.HOME} className="prototype-link">
+        <Link to={ROUTES.CONSTRUCTIONS} className="prototype-link">
           <img src={yurdisLogo} className="YURDIS_logo" alt="logo" />
           <img src={yurdisLogoText} className="YURDIS_logo_text" alt="logo-text" />
         </Link>
         <nav className="header-nav">
-          <Link
-            to={ROUTES.HOME}
-            className={`header-nav-link${location.pathname === ROUTES.HOME ? ' header-nav-link--active' : ''}`}
-          >
-            {ROUTE_LABELS.HOME}
-          </Link>
-          <Link
+          <NavLink
             to={ROUTES.CONSTRUCTIONS}
-            className={`header-nav-link${location.pathname.startsWith('/construction') ? ' header-nav-link--active' : ''}`}
+            className={({ isActive }) =>
+              'header-nav-link' + (isActive ? ' header-nav-link--active' : '')
+            }
           >
             {ROUTE_LABELS.CONSTRUCTIONS}
-          </Link>
+          </NavLink>
         </nav>
       </div>
 
