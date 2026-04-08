@@ -14,7 +14,6 @@ const ConstructionCard: FC<Props> = ({ construction }) => (
       <img
         src={construction.image_url || defaultImage}
         className="card-image"
-        alt={construction.title}
       />
       <div className="card-info">
         <p className="card-title">{construction.title}</p>

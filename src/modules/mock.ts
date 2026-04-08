@@ -1,7 +1,7 @@
 import type { Construction } from './constructionsApi'
 
-import stockadeImg from '../assets/constructions/stockade.png'
-import stockadeVideo from '../assets/constructions/stockade.mp4'
+//import stockadeImg from '../assets/constructions/stockade.png'
+//import stockadeVideo from '../assets/constructions/stockade.mp4'
 
 import supportingPilesImg from '../assets/constructions/supportingPiles.png'
 import supportingPilesVideo from '../assets/constructions/supportingPiles.mp4'
@@ -31,8 +31,8 @@ export const CONSTRUCTIONS_MOCK: Construction[] = [
     use_life: '20 лет',
     description:
       'Ограждающая конструкция из вертикально вкопанных заострённых брёвен, традиционно использовавшаяся для защиты поселений. Отличается простотой возведения и высокой механической прочностью. Типовой use-life: 20 лет',
-    image_url: stockadeImg,
-    video_url: stockadeVideo,
+    image_url: '',//stockadeImg,
+    video_url: '',//stockadeVideo,
     is_delete: false,
   },
   {
