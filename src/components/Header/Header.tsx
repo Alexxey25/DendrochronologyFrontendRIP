@@ -1,24 +1,28 @@
 import { Link, NavLink } from 'react-router-dom'
-import type { FormEvent } from 'react'
 import { ROUTES, ROUTE_LABELS } from '../../Routes'
 import yurdisLogo from '../../assets/yurdis-logo.svg'
 import yurdisLogoText from '../../assets/yurdis-logo-text.svg'
-import searchIcon from '../../assets/search_icon.svg'
+import InputField from '../InputField/InputField'
 import './Header.css'
 
 interface HeaderProps {
   searchQuery?: string
   onQueryChange?: (v: string) => void
   onSearch?: () => void
+  searchLoading?: boolean
+  searchPlaceholder?: string
+  searchButtonTitle?: string
 }
 
-export default function Header({ searchQuery, onQueryChange, onSearch }: HeaderProps) {
+export default function Header({
+  searchQuery,
+  onQueryChange,
+  onSearch,
+  searchLoading,
+  searchPlaceholder = 'Найти конструкцию',
+  searchButtonTitle,
+}: HeaderProps) {
   const showSearch = onSearch !== undefined
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    onSearch?.()
-  }
 
   return (
     <div className="header-bar">
@@ -40,18 +44,16 @@ export default function Header({ searchQuery, onQueryChange, onSearch }: HeaderP
       </div>
 
       {showSearch && (
-        <form onSubmit={handleSubmit} className="search-form">
-          <input
-            className="search-input"
-            type="text"
-            placeholder="Найти конструкцию"
+        <div className="search-form">
+          <InputField
             value={searchQuery ?? ''}
-            onChange={(e) => onQueryChange?.(e.target.value)}
+            setValue={(v) => onQueryChange?.(v)}
+            loading={searchLoading}
+            onSubmit={() => onSearch?.()}
+            placeholder={searchPlaceholder}
+            buttonTitle={searchButtonTitle}
           />
-          <button className="search-btn" type="submit" aria-label="search">
-            <img src={searchIcon} className="search-btn-icon" alt="" />
-          </button>
-        </form>
+        </div>
       )}
     </div>
   )

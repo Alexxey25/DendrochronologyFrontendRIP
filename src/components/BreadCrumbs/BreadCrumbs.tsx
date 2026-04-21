@@ -23,7 +23,7 @@ export const BreadCrumbs: FC<BreadCrumbsProps> = ({ crumbs }) => {
           ) : (
             <li>
               <Link to={crumb.path || ''}>{crumb.label}</Link>
-            </li>
+            </li> 
           )}
         </Fragment>
       ))}

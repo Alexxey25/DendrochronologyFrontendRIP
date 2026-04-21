@@ -1,0 +1,45 @@
+.inputField {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+}
+
+.inputField-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 20px;
+  border: 1px solid #000;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 16px;
+  color: var(--text-grey);
+  outline: none;
+  font-family: inherit;
+}
+
+.inputField-input::placeholder {
+  color: rgba(51, 51, 51, 0.45);
+}
+
+.inputField-btn {
+  flex-shrink: 0;
+  border-radius: 20px !important;
+  padding: 10px 22px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  white-space: nowrap;
+  background: var(--accent) !important;
+  border: 1px solid var(--accent) !important;
+  color: #fff !important;
+}
+
+.inputField-btn:hover:not(:disabled) {
+  background: var(--accent-light) !important;
+  border-color: var(--accent-light) !important;
+  color: #1a1a1a !important;
+}
+
+.inputField-btn:disabled {
+  opacity: 0.55;
+}
