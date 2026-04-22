@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import type { FC } from 'react'
-import type { Construction } from '../../modules/constructionsApi'
+import type { ClipSearchConstruction } from '../../modules/constructionClip'
 import defaultImage from '../../assets/constructions/default_image.jpg'
 import './ConstructionCard.css'
 
 interface Props {
-  construction: Construction
+  construction: ClipSearchConstruction
 }
 
 const ConstructionCard: FC<Props> = ({ construction }) => (
@@ -18,6 +18,12 @@ const ConstructionCard: FC<Props> = ({ construction }) => (
       <div className="card-info">
         <p className="card-title">{construction.title}</p>
         <p className="card-uselife">{construction.use_life}</p>
+        <p className="card-description">{construction.description}</p>
+        {construction.similarityScore !== null && (
+          <p className="card-similarity">
+            CLIP similarity: {(construction.similarityScore * 100).toFixed(1)}%
+          </p>
+        )}
       </div>
     </Link>
     <div className="card-actions">

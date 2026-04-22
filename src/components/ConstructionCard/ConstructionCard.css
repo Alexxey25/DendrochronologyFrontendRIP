@@ -32,10 +32,6 @@
   flex-shrink: 0;
 }
 
-.card-image-placeholder {
-  background: #eee;
-}
-
 .card-info {
   display: flex;
   flex-direction: column;
@@ -53,6 +49,20 @@
 .card-uselife {
   font-size: 14px;
   color: var(--text-grey);
+  margin: 0;
+}
+
+.card-description {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #3b3b3b;
+  margin: 0;
+}
+
+.card-similarity {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
   margin: 0;
 }
 

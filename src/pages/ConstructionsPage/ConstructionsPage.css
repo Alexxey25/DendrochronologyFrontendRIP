@@ -11,6 +11,91 @@
   font-size: 16px;
 }
 
+.clip-search-panel {
+  margin: 8px 40px 0;
+  padding: 24px;
+  border: 1px solid #e7e1d8;
+  border-radius: 16px;
+  background: #fcfaf6;
+}
+
+.clip-search-panel__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clip-search-panel__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.clip-search-panel__subtitle {
+  margin: 8px 0 0;
+  max-width: 680px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #5b5b5b;
+}
+
+.clip-search-panel__body {
+  display: grid;
+  grid-template-columns: 220px minmax(320px, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.clip-search-panel__file-input {
+  display: none;
+}
+
+.clip-search-panel__preview {
+  width: 220px;
+  height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f1ece4;
+  border: 1px dashed #d2c7b8;
+}
+
+.clip-search-panel__image,
+.clip-search-panel__placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.clip-search-panel__image {
+  object-fit: cover;
+}
+
+.clip-search-panel__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #7b7b7b;
+}
+
+.clip-search-panel__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.clip-search-panel__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.clip-search-panel__field {
+  max-width: 420px;
+}
+
 .cart-badge {
   position: fixed;
   right: 24px;
@@ -18,6 +103,9 @@
   width: 100px;
   height: 100px;
   z-index: 10;
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
 .cart-icon {
@@ -41,5 +129,28 @@
 
 .cart-inactive {
   opacity: 0.4;
-  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .clip-search-panel {
+    margin: 8px 20px 0;
+    padding: 20px;
+  }
+
+  .clip-search-panel__header,
+  .clip-search-panel__body {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .clip-search-panel__field,
+  .clip-search-panel__preview {
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+  }
+
+  .clip-search-panel__preview {
+    height: 260px;
+  }
 }
