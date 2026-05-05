@@ -21,7 +21,7 @@ const ConstructionCard: FC<Props> = ({ construction }) => (
         <p className="card-description">{construction.description}</p>
         {construction.similarityScore !== null && (
           <p className="card-similarity">
-            CLIP similarity: {(construction.similarityScore * 100).toFixed(1)}%
+            Сходство: {(construction.similarityScore * 100).toFixed(1)}%
           </p>
         )}
       </div>

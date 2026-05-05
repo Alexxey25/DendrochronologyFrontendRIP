@@ -15,10 +15,17 @@ export interface ClipSearchConstruction extends Construction {
   similarityScore: number | null
 }
 
-export function getClipDescriptionEn(construction: Pick<Construction, 'id' | 'description'>): string {
-  const mockDescription = CONSTRUCTIONS_MOCK.find((item) => item.id === construction.id)?.description
+export function getClipDescriptionEn(
+  construction: Pick<Construction, 'id' | 'short_description_en'>
+): string {
+  const apiDescription = construction.short_description_en?.trim()
+  if (apiDescription) return apiDescription
 
-  return mockDescription || construction.description || FALLBACK_CLIP_DESCRIPTION
+  const mockDescription = CONSTRUCTIONS_MOCK.find(
+    (item) => item.id === construction.id
+  )?.short_description_en?.trim()
+
+  return mockDescription || FALLBACK_CLIP_DESCRIPTION
 }
 
 export function buildClipSearchConstruction(construction: Construction): ClipSearchConstruction {

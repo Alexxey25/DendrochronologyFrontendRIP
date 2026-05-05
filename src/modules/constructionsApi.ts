@@ -5,6 +5,7 @@ export interface Construction {
   title: string
   use_life: string
   description: string
+  short_description_en?: string
   image_url: string
   video_url: string
   is_delete: boolean
@@ -15,6 +16,7 @@ interface ConstructionResponseDto {
   construction_title: string
   use_life: string
   description: string
+  short_description_en?: string
   image_url: string
   video_url: string
   is_delete: boolean
@@ -49,6 +51,7 @@ function normalizeConstruction(dto: ConstructionResponseDto): Construction {
     title: dto.construction_title,
     use_life: dto.use_life,
     description: dto.description,
+    short_description_en: dto.short_description_en,
     image_url: normalizeMediaUrl(dto.image_url),
     video_url: normalizeMediaUrl(dto.video_url),
     is_delete: dto.is_delete,

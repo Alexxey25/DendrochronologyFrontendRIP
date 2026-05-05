@@ -33,7 +33,7 @@ export function useClipConstructionSearch(constructions: Construction[]) {
     () => constructions.map((construction) => buildClipSearchConstruction(construction)),
     [constructions]
   )
-
+  // инициализация и получение текстовых векторов
   useEffect(() => {
     const worker = new Worker(new URL('../workers/clipSearch.worker.ts', import.meta.url), {
       type: 'module',
@@ -74,7 +74,7 @@ export function useClipConstructionSearch(constructions: Construction[]) {
       }
     }
   }, [])
-
+  // логика индексации и сортировки
   useEffect(() => {
     if (!workerRef.current || clipItems.length === 0) {
       setTextEmbeddings({})
