@@ -1,0 +1,146 @@
+.applications-page {
+  min-height: 100vh;
+  background: #fff;
+}
+
+.applications-page__inner {
+  width: min(1180px, calc(100% - 48px));
+  margin: 32px auto;
+}
+
+.applications-page__heading {
+  margin: 0 0 24px;
+}
+
+.applications-page__filters {
+  padding: 20px;
+  border: 1px solid #e7e1d8;
+  border-radius: 16px;
+  background: #fcfaf6;
+  margin-bottom: 24px;
+}
+
+.applications-page__filter-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.applications-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.applications-page__status-btn {
+  min-height: 34px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.applications-page__status-btn--complete {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.applications-page__status-btn--complete:hover:not(:disabled) {
+  background: rgba(140, 105, 55, 1);
+  border-color: rgba(140, 105, 55, 1);
+  color: #fff;
+}
+
+.applications-page__status-btn--reject {
+  border: 1px solid var(--accent);
+  background: var(--accent-light);
+  color: #000;
+}
+
+.applications-page__status-btn--reject:hover:not(:disabled) {
+  background: rgba(255, 180, 90, 1);
+  border-color: var(--accent);
+  color: #000;
+}
+
+.applications-page__status-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.applications-page__apply-btn {
+  margin-top: 16px;
+  min-height: 42px;
+  padding: 10px 22px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-light);
+  color: #000;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.applications-page__apply-btn:hover:not(:disabled) {
+  background: rgba(255, 180, 90, 1);
+}
+
+.applications-page__apply-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.applications-page__table-wrap {
+  overflow-x: auto;
+}
+
+.applications-page__linkish {
+  padding: 6px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-light);
+  color: #000;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.applications-page__linkish:hover {
+  background: rgba(255, 180, 90, 1);
+  border-color: var(--accent);
+}
+
+.applications-page__error {
+  margin-bottom: 16px;
+  color: #8a1d1d;
+}
+
+.applications-page__empty {
+  margin-top: 20px;
+  color: #777;
+}
+
+@media (max-width: 900px) {
+  .applications-page__filter-row {
+    grid-template-columns: 1fr;
+  }
+}

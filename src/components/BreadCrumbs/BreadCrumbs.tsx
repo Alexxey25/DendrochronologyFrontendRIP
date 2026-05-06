@@ -1,7 +1,6 @@
 import './BreadCrumbs.css'
 import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import type { FC } from 'react'
 
 interface ICrumb {
   label: string
@@ -12,7 +11,7 @@ interface BreadCrumbsProps {
   crumbs: ICrumb[]
 }
 
-export const BreadCrumbs: FC<BreadCrumbsProps> = ({ crumbs }) => {
+export function BreadCrumbs({ crumbs }: BreadCrumbsProps) {
   return (
     <ul className="breadcrumbs">
       {crumbs.map((crumb, index) => (
@@ -23,7 +22,7 @@ export const BreadCrumbs: FC<BreadCrumbsProps> = ({ crumbs }) => {
           ) : (
             <li>
               <Link to={crumb.path || ''}>{crumb.label}</Link>
-            </li> 
+            </li>
           )}
         </Fragment>
       ))}

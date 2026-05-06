@@ -1,4 +1,5 @@
 import { CONSTRUCTIONS_MOCK } from './mock'
+import { apiHttp } from '../api/http'
 
 export interface Construction {
   id: number
@@ -22,21 +23,8 @@ interface ConstructionResponseDto {
   is_delete: boolean
 }
 
-interface CartResponseDto {
-  dendrochronology_id: number
-  constructions_count: number
-}
-
-interface EmptyCartResponseDto {
-  status: 'no_draft'
-  constructions_count: number
-}
-
 const API_BASE_URL = '/api'
 const MINIO_PREVIEW_BASE_URL = 'http://localhost:9090/constructions'
-const EMPTY_CART = {
-  constructionsCount: 0,
-} as const
 
 function normalizeMediaUrl(value: string): string {
   if (!value) return ''
@@ -68,10 +56,6 @@ function filterMockConstructions(query: string): Construction[] {
   })
 }
 
-async function parseJson<T>(response: Response): Promise<T> {
-  return response.json() as Promise<T>
-}
-
 export async function fetchConstructions(query = ''): Promise<Construction[]> {
   try {
     const searchParams = new URLSearchParams()
@@ -80,17 +64,8 @@ export async function fetchConstructions(query = ''): Promise<Construction[]> {
     }
 
     const url = `${API_BASE_URL}/constructions${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-      cache: 'no-store',
-    })
-
-    if (!response.ok) {
-      throw new Error(`Backend returned ${response.status} for constructions list`)
-    }
-
-    const data = await parseJson<ConstructionResponseDto[]>(response)
+    const response = await apiHttp.get<ConstructionResponseDto[]>(url.replace(API_BASE_URL, ''))
+    const data = response.data
     return data.map(normalizeConstruction).filter((construction) => !construction.is_delete)
   } catch {
     return filterMockConstructions(query)
@@ -99,49 +74,10 @@ export async function fetchConstructions(query = ''): Promise<Construction[]> {
 
 export async function fetchConstructionById(id: number): Promise<Construction | undefined> {
   try {
-    const response = await fetch(`${API_BASE_URL}/constructions/${id}`, {
-      method: 'GET',
-      credentials: 'include',
-      cache: 'no-store',
-    })
-
-    if (!response.ok) {
-      throw new Error(`Backend returned ${response.status} for construction ${id}`)
-    }
-
-    const data = await parseJson<ConstructionResponseDto>(response)
+    const response = await apiHttp.get<ConstructionResponseDto>(`/constructions/${id}`)
+    const data = response.data
     return normalizeConstruction(data)
   } catch {
     return CONSTRUCTIONS_MOCK.find((construction) => construction.id === id)
-  }
-}
-
-export async function fetchCartInfo(): Promise<{ constructionsCount: number }> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/dendrochronologies/cart`, {
-      method: 'GET',
-      credentials: 'include',
-      cache: 'no-store',
-    })
-
-    if (response.status === 401) {
-      return EMPTY_CART
-    }
-
-    if (!response.ok) {
-      throw new Error(`Backend returned ${response.status} for cart info`)
-    }
-
-    const data = await parseJson<CartResponseDto | EmptyCartResponseDto>(response)
-    if ('status' in data && data.status === 'no_draft') {
-      return EMPTY_CART
-    }
-
-    const cart = data as CartResponseDto
-    return {
-      constructionsCount: cart.constructions_count,
-    }
-  } catch {
-    return EMPTY_CART
   }
 }

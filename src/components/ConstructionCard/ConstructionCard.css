@@ -87,6 +87,11 @@
   align-items: center;
 }
 
+.btn-add-small:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
 .btn-add-small:hover {
   background: rgba(255, 180, 90, 1);
 }

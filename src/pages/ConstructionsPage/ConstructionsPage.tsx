@@ -1,27 +1,33 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Link, useSearchParams } from 'react-router-dom'
+import { Form } from 'react-bootstrap'
 import Header from '../../components/Header/Header'
 import ConstructionsList from '../../components/ConstructionsList/ConstructionsList'
 import { BreadCrumbs } from '../../components/BreadCrumbs/BreadCrumbs'
 import { ROUTE_LABELS } from '../../Routes'
-import { fetchCartInfo, fetchConstructions } from '../../modules/constructionsApi'
+import { fetchConstructions } from '../../modules/constructionsApi'
 import type { Construction } from '../../modules/constructionsApi'
 import {
   CLIP_SEARCH_THRESHOLD_MAX,
   CLIP_SEARCH_THRESHOLD_MIN,
 } from '../../modules/constructionClip'
 import { useClipConstructionSearch } from '../../hooks/useClipConstructionSearch'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { fetchDendrochronologyCart } from '../../store/slices/dendrochronologySlice'
 import cartIcon from '../../assets/cart_icon.png'
 import './ConstructionsPage.css'
 
 export default function ConstructionsPage() {
+  const dispatch = useAppDispatch()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const [searchValue, setSearchValue] = useState('')
-  const [appliedQuery, setAppliedQuery] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const appliedQuery = (searchParams.get('q') ?? '').trim()
+  const [searchDraft, setSearchDraft] = useState(appliedQuery)
   const [constructions, setConstructions] = useState<Construction[]>([])
-  const [cartCount, setCartCount] = useState(0)
   const [searchLoading, setSearchLoading] = useState(false)
+  const { cart, cartLoading } = useAppSelector((state) => state.dendrochronology)
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
   const {
     visibleConstructions,
     selectedImageUrl,
@@ -38,8 +44,38 @@ export default function ConstructionsPage() {
     resetImageSearch,
   } = useClipConstructionSearch(constructions)
 
+  useEffect(() => {
+    setSearchDraft(appliedQuery)
+  }, [appliedQuery])
+
+  const searchSuggestions = useMemo(() => {
+    const q = searchDraft.trim().toLowerCase()
+    const pool = q
+      ? constructions.filter((c) => c.title.toLowerCase().includes(q))
+      : constructions
+    const titles = pool.slice(0, 20).map((c) => c.title)
+    return [...new Set(titles)]
+  }, [constructions, searchDraft])
+
+  const handleCatalogReset = () => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.delete('q')
+      return next
+    })
+    setSearchDraft('')
+    resetImageSearch()
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
   const handleSearch = () => {
-    setAppliedQuery(searchValue.trim())
+    const nextQ = searchDraft.trim()
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      if (nextQ) next.set('q', nextQ)
+      else next.delete('q')
+      return next
+    })
   }
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -63,15 +99,11 @@ export default function ConstructionsPage() {
     async function loadConstructions() {
       setSearchLoading(true)
 
-      const [constructionsResult, cartResult] = await Promise.all([
-        fetchConstructions(appliedQuery),
-        fetchCartInfo(),
-      ])
+      const constructionsResult = await fetchConstructions(appliedQuery)
 
       if (isCancelled) return
 
       setConstructions(constructionsResult)
-      setCartCount(cartResult.constructionsCount)
       setSearchLoading(false)
     }
 
@@ -82,13 +114,19 @@ export default function ConstructionsPage() {
     }
   }, [appliedQuery])
 
+  useEffect(() => {
+    void dispatch(fetchDendrochronologyCart())
+  }, [dispatch, isAuthenticated])
+
   return (
     <div className="mainpage">
       <Header
-        searchQuery={searchValue}
-        onQueryChange={setSearchValue}
+        searchQuery={searchDraft}
+        onQueryChange={setSearchDraft}
         onSearch={handleSearch}
         searchLoading={searchLoading}
+        onCatalogReset={handleCatalogReset}
+        searchSuggestions={searchSuggestions}
       />
       <BreadCrumbs crumbs={[{ label: ROUTE_LABELS.CONSTRUCTIONS }]} />
       <section className="clip-search-panel">
@@ -116,21 +154,22 @@ export default function ConstructionsPage() {
 
           <div className="clip-search-panel__controls">
             <div className="clip-search-panel__buttons">
-              <Button
+              <button
                 type="button"
+                className="clip-search-panel__btn clip-search-panel__btn--primary"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={!isModelReady || isIndexing || isSearching}
               >
-                {isSearching ? 'Searching...' : 'Загрузить изображение'}
-              </Button>
-              <Button
+                {isSearching ? 'Поиск…' : 'Загрузить фото'}
+              </button>
+              <button
                 type="button"
-                variant="outline-secondary"
+                className="clip-search-panel__btn clip-search-panel__btn--outline"
                 onClick={handleResetImageSearch}
                 disabled={!imageSearchActive && !selectedImageUrl}
               >
                 Сбросить
-              </Button>
+              </button>
             </div>
 
             <Form.Group className="clip-search-panel__field">
@@ -177,10 +216,24 @@ export default function ConstructionsPage() {
         </p>
       )}
 
-      <div className={`cart-badge${cartCount > 0 ? '' : ' cart-inactive'}`}>
-        <img src={cartIcon} className="cart-icon" alt="корзина" />
-        <span className="cart-count">{cartCount}</span>
-      </div>
+      {cart.hasDraft && cart.id ? (
+        <Link className="cart-badge" to={`/dendrochronology/${cart.id}`}>
+          <img src={cartIcon} className="cart-icon" alt="заявка" />
+          <span className="cart-count">{cart.constructionsCount}</span>
+        </Link>
+      ) : (
+        <div
+          className="cart-badge cart-inactive"
+          title={
+            cartLoading
+              ? 'Проверяем черновик заявки'
+              : 'Черновик появится после добавления конструкции'
+          }
+        >
+          <img src={cartIcon} className="cart-icon" alt="заявка" />
+          <span className="cart-count">0</span>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,17 +1,27 @@
 import { useParams, Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import type { FC } from 'react'
 import { BreadCrumbs } from '../../components/BreadCrumbs/BreadCrumbs'
 import { ROUTES, ROUTE_LABELS } from '../../Routes'
 import HeaderApp from '../../components/HeaderApp/HeaderApp'
 import { fetchConstructionById } from '../../modules/constructionsApi'
 import type { Construction } from '../../modules/constructionsApi'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import {
+  addConstructionToDendrochronology,
+  fetchDendrochronologyDetail,
+} from '../../store/slices/dendrochronologySlice'
 import defaultImage from '../../assets/constructions/default_image.jpg'
 import defaultVideo from '../../assets/constructions/defaultVideo.mp4'
 import './ConstructionPage.css'
 
-const ConstructionPage: FC = () => {
+export default function ConstructionPage() {
   const { id } = useParams()
+  const dispatch = useAppDispatch()
+  const { isAuthenticated } = useAppSelector((state) => state.user)
+  const { cart, detail } = useAppSelector((state) => state.dendrochronology)
+  const isBusy = useAppSelector(
+    (state) => state.dendrochronology.applicationMutationLoading,
+  )
   const [construction, setConstruction] = useState<Construction | undefined>()
   const [isLoading, setIsLoading] = useState(true)
 
@@ -36,6 +46,28 @@ const ConstructionPage: FC = () => {
       isCancelled = true
     }
   }, [id])
+
+  useEffect(() => {
+    if (!isAuthenticated || !cart.hasDraft || !cart.id) return
+    const loadedId = detail?.dendrochronology?.dendrochronology_id
+    if (loadedId !== cart.id) {
+      void dispatch(fetchDendrochronologyDetail(cart.id))
+    }
+  }, [isAuthenticated, cart.hasDraft, cart.id, detail?.dendrochronology?.dendrochronology_id, dispatch])
+
+  const isAlreadyInDraft =
+    Boolean(
+      construction &&
+        cart.hasDraft &&
+        cart.id &&
+        detail?.dendrochronology?.dendrochronology_id === cart.id &&
+        detail.items.some((item) => item.construction_id === construction.id),
+    )
+
+  const handleAdd = () => {
+    if (!construction || !isAuthenticated || isBusy) return
+    void dispatch(addConstructionToDendrochronology(construction.id))
+  }
 
   if (isLoading) {
     return (
@@ -86,16 +118,26 @@ const ConstructionPage: FC = () => {
           </video>
         </div>
 
-        <div style={{ padding: '24px 0' }}>
-          <h2>{construction.title}</h2>
-          <p>
-            <strong>Срок службы:</strong> {construction.use_life}
-          </p>
-          <p>{construction.description}</p>
+        <div className="product-actions">
+          {!isAlreadyInDraft ? (
+            <button
+              type="button"
+              className="product-add-btn"
+              onClick={handleAdd}
+              disabled={!isAuthenticated || isBusy}
+              title={
+                isAuthenticated
+                  ? 'Добавить в черновик заявки'
+                  : 'Войдите, чтобы создать заявку'
+              }
+            >
+              {isBusy ? 'Добавление...' : 'Добавить в заявку'}
+            </button>
+          ) : (
+            <p className="product-in-draft-note">Уже в черновике заявки</p>
+          )}
         </div>
       </div>
     </div>
   )
 }
-
-export default ConstructionPage

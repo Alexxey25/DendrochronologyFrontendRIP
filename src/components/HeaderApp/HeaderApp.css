@@ -23,3 +23,37 @@
   height: 24px;
   width: auto;
 }
+
+.header-bar_app .header-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-bar_app .header-nav-link {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+}
+
+.header-bar_app .header-nav-link:hover,
+.header-bar_app .header-nav-link--active,
+.header-bar_app .header-nav-button:hover {
+  color: var(--accent-light);
+}
+
+.header-bar_app .header-nav-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.header-bar_app .header-username {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 600;
+}

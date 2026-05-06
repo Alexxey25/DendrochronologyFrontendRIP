@@ -3,6 +3,9 @@ import { ROUTES, ROUTE_LABELS } from '../../Routes'
 import yurdisLogo from '../../assets/yurdis-logo.svg'
 import yurdisLogoText from '../../assets/yurdis-logo-text.svg'
 import InputField from '../InputField/InputField'
+import { signOut } from '../../modules/authApi'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { logoutUser } from '../../store/slices/userSlice'
 import './Header.css'
 
 interface HeaderProps {
@@ -12,6 +15,9 @@ interface HeaderProps {
   searchLoading?: boolean
   searchPlaceholder?: string
   searchButtonTitle?: string
+  /** Сброс каталога и поиска при переходе на главную с хедера */
+  onCatalogReset?: () => void
+  searchSuggestions?: string[]
 }
 
 export default function Header({
@@ -21,13 +27,31 @@ export default function Header({
   searchLoading,
   searchPlaceholder = 'Найти конструкцию',
   searchButtonTitle,
+  onCatalogReset,
+  searchSuggestions,
 }: HeaderProps) {
   const showSearch = onSearch !== undefined
+  const dispatch = useAppDispatch()
+  const { isAuthenticated, login } = useAppSelector((state) => state.user)
+
+  const handleCatalogNav = () => {
+    onCatalogReset?.()
+  }
+
+  const handleLogout = () => {
+    void signOut().finally(() => {
+      dispatch(logoutUser())
+    })
+  }
 
   return (
     <div className="header-bar">
       <div className="header-logo">
-        <Link to={ROUTES.CONSTRUCTIONS} className="prototype-link">
+        <Link
+          to={ROUTES.CONSTRUCTIONS}
+          className="prototype-link"
+          onClick={handleCatalogNav}
+        >
           <img src={yurdisLogo} className="YURDIS_logo" alt="logo" />
           <img src={yurdisLogoText} className="YURDIS_logo_text" alt="logo-text" />
         </Link>
@@ -37,9 +61,45 @@ export default function Header({
             className={({ isActive }) =>
               'header-nav-link' + (isActive ? ' header-nav-link--active' : '')
             }
+            onClick={handleCatalogNav}
           >
             {ROUTE_LABELS.CONSTRUCTIONS}
           </NavLink>
+          {isAuthenticated ? (
+            <>
+              <NavLink
+                to={ROUTES.DENDROCHRONOLOGIES}
+                className={({ isActive }) =>
+                  'header-nav-link' + (isActive ? ' header-nav-link--active' : '')
+                }
+              >
+                {ROUTE_LABELS.DENDROCHRONOLOGIES}
+              </NavLink>
+              <button type="button" className="header-nav-button" onClick={handleLogout}>
+                Выход
+              </button>
+              <span className="header-username">{login}</span>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to={ROUTES.SIGN_IN}
+                className={({ isActive }) =>
+                  'header-nav-link' + (isActive ? ' header-nav-link--active' : '')
+                }
+              >
+                {ROUTE_LABELS.SIGN_IN}
+              </NavLink>
+              <NavLink
+                to={ROUTES.SIGN_UP}
+                className={({ isActive }) =>
+                  'header-nav-link' + (isActive ? ' header-nav-link--active' : '')
+                }
+              >
+                {ROUTE_LABELS.SIGN_UP}
+              </NavLink>
+            </>
+          )}
         </nav>
       </div>
 
@@ -52,6 +112,7 @@ export default function Header({
             onSubmit={() => onSearch?.()}
             placeholder={searchPlaceholder}
             buttonTitle={searchButtonTitle}
+            suggestions={searchSuggestions}
           />
         </div>
       )}

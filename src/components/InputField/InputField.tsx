@@ -1,4 +1,3 @@
-import type { FC } from 'react'
 import { Button } from 'react-bootstrap'
 import './InputField.css'
 
@@ -9,27 +8,43 @@ interface Props {
   loading?: boolean
   placeholder?: string
   buttonTitle?: string
+  /** Подсказки при вводе (нативный datalist) */
+  suggestions?: string[]
 }
 
-const InputField: FC<Props> = ({
+export default function InputField({
   value,
   setValue,
   onSubmit,
   loading,
   placeholder,
   buttonTitle = 'Искать',
-}) => (
-  <div className="inputField">
-    <input
-      className="inputField-input"
-      value={value}
-      placeholder={placeholder}
-      onChange={(event) => setValue(event.target.value)}
-    />
-    <Button className="inputField-btn" disabled={loading} onClick={onSubmit} type="button">
-      {buttonTitle}
-    </Button>
-  </div>
-)
+  suggestions,
+}: Props) {
+  const suggestionOptions = suggestions ?? []
+  const suggestionsListId = suggestionOptions.length > 0
+    ? 'construction-search-hints'
+    : undefined
 
-export default InputField
+  return (
+    <div className="inputField">
+      {suggestionsListId ? (
+        <datalist id={suggestionsListId}>
+          {suggestionOptions.map((title) => (
+            <option key={title} value={title} />
+          ))}
+        </datalist>
+      ) : null}
+      <input
+        className="inputField-input"
+        value={value}
+        placeholder={placeholder}
+        list={suggestionsListId}
+        onChange={(event) => setValue(event.target.value)}
+      />
+      <Button className="inputField-btn" disabled={loading} onClick={onSubmit} type="button">
+        {buttonTitle}
+      </Button>
+    </div>
+  )
+}
