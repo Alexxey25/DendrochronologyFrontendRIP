@@ -109,6 +109,7 @@
   font: inherit;
   font-size: 14px;
   cursor: pointer;
+  text-align: left;
 }
 
 .header-nav-button:hover {
@@ -119,4 +120,151 @@
   font-size: 14px;
   color: #fff;
   font-weight: 600;
+}
+
+.header-username--mobile {
+  padding: 8px 0 4px;
+}
+
+/* Бургер-меню (п. 4 PWA.md): узкий экран — ссылки в выезжающей панели */
+.header-nav-mobile {
+  display: none;
+}
+
+.header-nav-mobile-toggle {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header-nav-mobile-burger {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: #fff;
+  position: relative;
+  transition: transform 0.2s linear;
+}
+
+.header-nav-mobile-burger::before,
+.header-nav-mobile-burger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  transition:
+    transform 0.2s linear,
+    opacity 0.2s linear;
+}
+
+.header-nav-mobile-burger::before {
+  top: -7px;
+}
+
+.header-nav-mobile-burger::after {
+  top: 7px;
+}
+
+.header-nav-mobile--open .header-nav-mobile-burger {
+  transform: rotate(45deg);
+}
+
+.header-nav-mobile--open .header-nav-mobile-burger::before {
+  opacity: 0;
+}
+
+.header-nav-mobile--open .header-nav-mobile-burger::after {
+  top: 0;
+  transform: rotate(-90deg);
+}
+
+.header-nav-mobile-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 14px 0;
+  min-width: 200px;
+  padding: 16px 18px;
+  background-color: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.header-nav-mobile-panel[hidden] {
+  display: none !important;
+}
+
+.header-nav-mobile-panel:not([hidden]) {
+  display: flex;
+}
+
+@media (max-width: 960px) {
+  .header-bar {
+    padding: 16px 20px 20px;
+    min-height: 0;
+  }
+
+  .header-logo {
+    margin-left: 0;
+    flex-wrap: wrap;
+    row-gap: 12px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-bar .search-form {
+    margin-left: 0;
+    max-width: none;
+  }
+}
+
+/* как в методичке ~545px: горизонтальное меню скрыто, бургер включён */
+@media (max-width: 640px) {
+  .header-logo {
+    position: relative;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .prototype-link {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .header-nav--desktop {
+    display: none !important;
+  }
+
+  .header-nav-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: relative;
+  }
+
+  .header-nav-mobile-panel .header-nav-link,
+  .header-nav-mobile-panel .header-nav-button {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 520px) {
+  .header-bar .search-form {
+    width: 100%;
+  }
 }

@@ -107,3 +107,32 @@
   background: rgba(140, 105, 55, 1);
   color: #fff;
 }
+
+@media (max-width: 560px) {
+  .card-link {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .card-image {
+    width: 100%;
+    height: auto;
+    max-height: 220px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  .card-info {
+    padding-top: 0;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-add-small {
+    justify-content: center;
+  }
+}

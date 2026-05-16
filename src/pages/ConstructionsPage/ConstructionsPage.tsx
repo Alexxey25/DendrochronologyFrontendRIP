@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Form } from 'react-bootstrap'
 import Header from '../../components/Header/Header'
 import ConstructionsList from '../../components/ConstructionsList/ConstructionsList'
@@ -15,14 +15,17 @@ import {
 import { useClipConstructionSearch } from '../../hooks/useClipConstructionSearch'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { fetchDendrochronologyCart } from '../../store/slices/dendrochronologySlice'
+import {
+  clearServicesFilter,
+  setServicesFilterQuery,
+} from '../../store/slices/servicesFilterSlice'
 import cartIcon from '../../assets/cart_icon.png'
 import './ConstructionsPage.css'
 
 export default function ConstructionsPage() {
   const dispatch = useAppDispatch()
+  const appliedQuery = useAppSelector((state) => state.servicesFilter.appliedQuery)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const [searchParams, setSearchParams] = useSearchParams()
-  const appliedQuery = (searchParams.get('q') ?? '').trim()
   const [searchDraft, setSearchDraft] = useState(appliedQuery)
   const [constructions, setConstructions] = useState<Construction[]>([])
   const [searchLoading, setSearchLoading] = useState(false)
@@ -58,24 +61,14 @@ export default function ConstructionsPage() {
   }, [constructions, searchDraft])
 
   const handleCatalogReset = () => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev)
-      next.delete('q')
-      return next
-    })
+    dispatch(clearServicesFilter())
     setSearchDraft('')
     resetImageSearch()
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const handleSearch = () => {
-    const nextQ = searchDraft.trim()
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev)
-      if (nextQ) next.set('q', nextQ)
-      else next.delete('q')
-      return next
-    })
+    dispatch(setServicesFilterQuery(searchDraft))
   }
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {

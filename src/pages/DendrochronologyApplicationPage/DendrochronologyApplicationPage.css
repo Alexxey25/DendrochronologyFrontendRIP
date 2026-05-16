@@ -196,19 +196,3 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
-
-@media (max-width: 900px) {
-  .dendrochronology-content {
-    width: min(100% - 24px, 1180px);
-  }
-
-  .app-table-header,
-  .app-row {
-    grid-template-columns: 90px minmax(180px, 1fr) 110px 130px 130px 110px;
-    overflow-x: auto;
-  }
-
-  .app-row--editable {
-    grid-template-columns: 90px minmax(180px, 1fr) 110px 130px 130px 110px 130px;
-  }
-}

@@ -43,3 +43,14 @@
 .inputField-btn:disabled {
   opacity: 0.55;
 }
+
+@media (max-width: 520px) {
+  .inputField {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inputField-btn {
+    width: 100%;
+  }
+}

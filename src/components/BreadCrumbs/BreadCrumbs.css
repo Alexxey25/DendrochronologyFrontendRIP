@@ -35,3 +35,16 @@
   color: #ccc;
   user-select: none;
 }
+
+@media (max-width: 640px) {
+  .breadcrumbs {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    row-gap: 6px;
+  }
+
+  .breadcrumbs a,
+  .breadcrumbs li {
+    font-size: 13px;
+  }
+}

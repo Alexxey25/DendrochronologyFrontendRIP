@@ -70,3 +70,19 @@
 .auth-page__spinner {
   margin-right: 8px;
 }
+
+@media (max-width: 480px) {
+  .auth-page.auth-page--responsive {
+    padding: 16px;
+    align-items: flex-start;
+    padding-top: 24px;
+  }
+
+  .auth-page.auth-page--responsive .auth-page__panel {
+    padding: 24px 20px;
+  }
+
+  .auth-page.auth-page--responsive .auth-page__title {
+    font-size: clamp(1.35rem, 6vw, 1.75rem);
+  }
+}

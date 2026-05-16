@@ -89,3 +89,25 @@
   background: rgba(140, 105, 55, 1);
   color: #fff;
 }
+
+@media (max-width: 600px) {
+  .product-card {
+    padding: 24px 16px;
+  }
+
+  .product-media-wrap {
+    width: min(100%, 360px);
+    height: auto;
+    aspect-ratio: 9 / 16;
+    max-height: 70vh;
+  }
+
+  .product-actions {
+    width: 100%;
+  }
+
+  .product-add-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}

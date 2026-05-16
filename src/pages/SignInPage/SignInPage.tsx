@@ -44,7 +44,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="auth-page">
+    <div className="auth-page auth-page--responsive">
       <div className="auth-page__panel">
         <h1 className="auth-page__title">Вход</h1>
         {error ? <div className="auth-page__error">{error}</div> : null}
