@@ -11,8 +11,7 @@
     "preview": "vite preview",
     "generate-pwa-icons": "node scripts/generate-pwa-icons.mjs",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "tauri": "tauri"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.1.0",
@@ -28,8 +27,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
-    "@tauri-apps/api": "^2.11.0",
-    "@tauri-apps/cli": "^2.11.1",
     "@types/node": "^24.6.0",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",

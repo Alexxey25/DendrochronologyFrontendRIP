@@ -1,4 +1,0 @@
-[[permission]]
-identifier = "allow-tauri"
-description = "Allows invoke of the tauri command from the frontend"
-commands.allow = ["tauri"]
