@@ -24,7 +24,6 @@ interface ConstructionResponseDto {
   is_delete: boolean
 }
 
-const API_BASE_URL = '/api'
 const MINIO_PREVIEW_BASE_URL = minioConstructionBaseUrl
 
 function normalizeMediaUrl(value: string): string {
@@ -64,8 +63,8 @@ export async function fetchConstructions(query = ''): Promise<Construction[]> {
       searchParams.set('query', query.trim())
     }
 
-    const url = `${API_BASE_URL}/constructions${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
-    const response = await apiHttp.get<ConstructionResponseDto[]>(url.replace(API_BASE_URL, ''))
+    const qs = searchParams.toString() ? `?${searchParams.toString()}` : ''
+    const response = await apiHttp.get<ConstructionResponseDto[]>(`constructions${qs}`)
     const data = response.data
     return data.map(normalizeConstruction).filter((construction) => !construction.is_delete)
   } catch {
@@ -75,7 +74,7 @@ export async function fetchConstructions(query = ''): Promise<Construction[]> {
 
 export async function fetchConstructionById(id: number): Promise<Construction | undefined> {
   try {
-    const response = await apiHttp.get<ConstructionResponseDto>(`/constructions/${id}`)
+    const response = await apiHttp.get<ConstructionResponseDto>(`constructions/${id}`)
     const data = response.data
     return normalizeConstruction(data)
   } catch {

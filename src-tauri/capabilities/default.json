@@ -1,7 +1,22 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "enables the default permissions",
+  "description": "enables default permissions + HTTP/CORS-fetch к локальному бэкенду (замените URL при работе по LAN)",
   "windows": ["main"],
-  "permissions": ["core:default"]
+  "permissions": [
+    "cors-fetch:default",
+    {
+      "identifier": "http:default",
+      "allow": [
+        { "url": "http://127.0.0.1" },
+        { "url": "http://localhost" },
+        { "url": "http://192.168.194.69" }
+      ],
+      "deny": []
+    },
+    "core:default",
+    "http:allow-fetch",
+    "http:allow-fetch-read-body",
+    "http:allow-fetch-send"
+  ]
 }

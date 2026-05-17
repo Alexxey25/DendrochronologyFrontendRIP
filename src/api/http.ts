@@ -1,6 +1,14 @@
 import axios from 'axios'
 import { resolveApiBaseUrl } from '../config/apiBaseUrl'
 
+/** Axios при url, начинающемся с «/», подставляет путь к хосту и игнорирует `baseURL` — ломает `/api` в dev. */
+export function joinUrlUnderBaseURL(config: { url?: string }) {
+  const u = config.url
+  if (u != null && u !== '' && !/^https?:\/\//i.test(u)) {
+    config.url = u.replace(/^\//, '')
+  }
+}
+
 export const apiHttp = axios.create({
   baseURL: resolveApiBaseUrl(),
   withCredentials: true,
@@ -10,6 +18,7 @@ export const apiHttp = axios.create({
 })
 
 apiHttp.interceptors.request.use((config) => {
+  joinUrlUnderBaseURL(config)
   const token = localStorage.getItem('token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
