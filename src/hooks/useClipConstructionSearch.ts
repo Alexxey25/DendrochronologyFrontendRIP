@@ -78,6 +78,7 @@ export function useClipConstructionSearch(constructions: Construction[]) {
   useEffect(() => {
     if (!workerRef.current || clipItems.length === 0) {
       setTextEmbeddings({})
+      setIsIndexing(false)
       return
     }
 

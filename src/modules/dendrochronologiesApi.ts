@@ -271,12 +271,13 @@ export async function getDendrochronologyCart(): Promise<DendrochronologyCart> {
     ])
     const value = (data && typeof data === 'object' ? data : {}) as Record<string, unknown>
     const count = normalizeNumber(value.constructions_count ?? value.constructionsCount)
-    const id = value.dendrochronology_id ?? value.id
+    const idRaw = value.dendrochronology_id ?? value.id
+    const idParsed = normalizeNumber(idRaw, NaN)
     const cart: DendrochronologyCart = {
       ...EMPTY_CART,
       hasDraft: value.status !== 'no_draft' && count > 0,
       constructionsCount: count,
-      id: typeof id === 'number' ? id : undefined,
+      id: Number.isFinite(idParsed) ? idParsed : undefined,
       incompleteItemsCount: normalizeNumber(value.incomplete_items_count, undefined),
     }
     if (!cart.hasDraft) saveLocalDraft(null)

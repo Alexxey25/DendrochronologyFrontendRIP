@@ -16,7 +16,9 @@
 body {
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  overflow-y: auto;
   font-family: var(--font-family-inter), 'Segoe UI', Arial, sans-serif;
   background-color: #fff;
 }

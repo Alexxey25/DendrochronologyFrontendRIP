@@ -111,6 +111,9 @@ export default function ConstructionsPage() {
     void dispatch(fetchDendrochronologyCart())
   }, [dispatch, isAuthenticated])
 
+  const topKUpperBound =
+    constructions.length > 0 ? constructions.length : Math.max(topK, 1)
+
   return (
     <div className="mainpage">
       <Header
@@ -177,19 +180,23 @@ export default function ConstructionsPage() {
             </Form.Group>
 
             <Form.Group className="clip-search-panel__field">
-              <Form.Label>TopK</Form.Label>
-              <Form.Select
+              <Form.Label>TopK (1–{topKUpperBound})</Form.Label>
+              <Form.Control
+                type="number"
+                min={1}
+                max={topKUpperBound}
+                step={1}
+                inputMode="numeric"
                 value={topK}
-                onChange={(event) => setTopK(Number(event.target.value))}
-              >
-                {Array.from({ length: Math.max(constructions.length, 1) }, (_, index) => index + 1).map(
-                  (value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  )
-                )}
-              </Form.Select>
+                disabled={constructions.length === 0}
+                onChange={(event) => {
+                  const parsed = Number.parseInt(event.target.value, 10)
+                  if (Number.isNaN(parsed)) {
+                    return
+                  }
+                  setTopK(Math.min(Math.max(1, parsed), topKUpperBound))
+                }}
+              />
             </Form.Group>
           </div>
         </div>
@@ -205,7 +212,9 @@ export default function ConstructionsPage() {
                   ? ` Best current match scored ${bestSimilarityScore.toFixed(2)}.`
                   : ''
               }`
-            : `По запросу «${appliedQuery}» конструкции не найдены`}
+            : searchLoading
+              ? 'Загрузка…'
+              : `По запросу «${appliedQuery}» конструкции не найдены`}
         </p>
       )}
 

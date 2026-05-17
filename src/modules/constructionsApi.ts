@@ -1,6 +1,6 @@
 import { CONSTRUCTIONS_MOCK } from './mock'
 import { apiHttp } from '../api/http'
-import { minioConstructionBaseUrl } from '../config/backendConstants'
+import { minioObjectUrl } from '../config/backendConstants'
 
 export interface Construction {
   id: number
@@ -24,13 +24,10 @@ interface ConstructionResponseDto {
   is_delete: boolean
 }
 
-const MINIO_PREVIEW_BASE_URL = minioConstructionBaseUrl
-
 function normalizeMediaUrl(value: string): string {
-  if (!value) return ''
-  if (value.startsWith('http://') || value.startsWith('https://')) return value
-  if (value.startsWith('/')) return `${MINIO_PREVIEW_BASE_URL}${value}`
-  return `${MINIO_PREVIEW_BASE_URL}/${value}`
+  const raw = value?.trim() ?? ''
+  if (!raw) return ''
+  return minioObjectUrl(raw)
 }
 
 function normalizeConstruction(dto: ConstructionResponseDto): Construction {

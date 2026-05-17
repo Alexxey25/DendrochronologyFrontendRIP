@@ -21,12 +21,12 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' http://localhost:3000 http://127.0.0.1:3000 http://localhost:4173 http://127.0.0.1:4173; connect-src 'self' http://127.0.0.1:8080 http://127.0.0.1:9090 http://localhost:8080 http://localhost:9090 http://192.168.194.69:8080 http://192.168.194.69:9090 http://localhost:3000 http://127.0.0.1:3000 https://huggingface.co https://*.huggingface.co https://*.hf.co https://cdn.jsdelivr.net; img-src 'self' data: blob: http://127.0.0.1:9090 http://localhost:9090 http://192.168.194.69:9090; media-src 'self' blob: http://127.0.0.1:9090 http://localhost:9090 http://192.168.194.69:9090; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline';"
+      "csp": "default-src 'self' http://localhost:3000 http://127.0.0.1:3000 http://localhost:4173 http://127.0.0.1:4173; connect-src 'self' http://127.0.0.1:8080 http://127.0.0.1:9090 http://127.0.0.1:9091 http://localhost:8080 http://localhost:9090 http://localhost:9091 http://192.168.194.69:8080 http://192.168.194.69:9090 http://192.168.194.69:9091 http://localhost:3000 http://127.0.0.1:3000 https://huggingface.co https://*.huggingface.co https://*.hf.co https://cdn.jsdelivr.net; img-src 'self' data: blob: http://127.0.0.1:3000 http://localhost:3000 http://127.0.0.1:9090 http://127.0.0.1:9091 http://localhost:9090 http://localhost:9091 http://192.168.194.69:9090 http://192.168.194.69:9091; media-src 'self' blob: http://127.0.0.1:3000 http://localhost:3000 http://127.0.0.1:9090 http://127.0.0.1:9091 http://localhost:9090 http://localhost:9091 http://192.168.194.69:9090 http://192.168.194.69:9091; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline';"
     }
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["nsis"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

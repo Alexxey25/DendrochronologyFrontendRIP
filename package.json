@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "tauri:launch": "node scripts/launch-tauri-release.mjs",
     "generate-api": "node scripts/generate-api.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -15,6 +18,8 @@
   "dependencies": {
     "@huggingface/transformers": "^4.1.0",
     "@reduxjs/toolkit": "^2.11.2",
+    "@tauri-apps/api": "^2.11.0",
+    "@tauri-apps/plugin-http": "^2.5.9",
     "axios": "^1.16.0",
     "bootstrap": "^5.3.8",
     "react": "^19.1.1",

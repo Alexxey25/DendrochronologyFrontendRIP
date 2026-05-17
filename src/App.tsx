@@ -10,9 +10,11 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css'
 
 function routerBasename(): string | undefined {
-  const b = import.meta.env.BASE_URL ?? '/'
-  if (b === '/') return undefined
-  const trimmed = b.endsWith('/') ? b.slice(0, -1) : b
+  const raw = import.meta.env.BASE_URL ?? '/'
+  // Vite при base: './' даёт BASE_URL './' — React Router ждёт basename '' или путь с ведущим '/'; иначе белый экран в Tauri.
+  if (raw === '/' || raw === './' || raw === '.') return undefined
+  const trimmed = raw.endsWith('/') ? raw.slice(0, -1) : raw
+  if (!trimmed.startsWith('/')) return undefined
   return trimmed === '' ? undefined : trimmed
 }
 
