@@ -1,5 +1,6 @@
 import { CONSTRUCTIONS_MOCK } from './mock'
 import { apiHttp } from '../api/http'
+import { minioConstructionBaseUrl } from '../config/backendConstants'
 
 export interface Construction {
   id: number
@@ -24,7 +25,7 @@ interface ConstructionResponseDto {
 }
 
 const API_BASE_URL = '/api'
-const MINIO_PREVIEW_BASE_URL = 'http://localhost:9090/constructions'
+const MINIO_PREVIEW_BASE_URL = minioConstructionBaseUrl
 
 function normalizeMediaUrl(value: string): string {
   if (!value) return ''

@@ -6,12 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/copy-spa-404.mjs",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "generate-api": "node scripts/generate-api.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-pwa-icons": "node scripts/generate-pwa-icons.mjs",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "generate-pwa-icons": "node scripts/generate-pwa-icons.mjs"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.1.0",

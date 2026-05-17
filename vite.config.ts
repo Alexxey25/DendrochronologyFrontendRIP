@@ -1,33 +1,23 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import mkcert from 'vite-plugin-mkcert'
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
 import { GITHUB_PAGES_REPO_SLUG } from './src/config/githubPages'
+import { API_PORT, BACKEND_HOST } from './src/config/backendConstants'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const backendApiOrigin = `http://${BACKEND_HOST}:${API_PORT}`
 
-const certKeyPath = path.resolve(__dirname, 'cert.key')
-const certCrtPath = path.resolve(__dirname, 'cert.crt')
-const httpsOpts =
-  fs.existsSync(certKeyPath) && fs.existsSync(certCrtPath)
-    ? {
-        key: fs.readFileSync(certKeyPath),
-        cert: fs.readFileSync(certCrtPath),
-      }
-    : undefined
+const isProdBuild = process.env.NODE_ENV === 'production'
+const base = !isProdBuild ? '/' : `/${GITHUB_PAGES_REPO_SLUG}/`
 
-// П. 1 PWA.md: base = /ИмяРепозитория/
 export default defineConfig({
-  base: `/${GITHUB_PAGES_REPO_SLUG}/`,
+  base,
   server: {
     host: true,
     port: 3000,
-    ...(httpsOpts ? { https: httpsOpts } : {}),
+    strictPort: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: backendApiOrigin,
         changeOrigin: true,
         secure: false,
       },
@@ -36,10 +26,6 @@ export default defineConfig({
   preview: {
     host: true,
     port: 4173,
-    ...(httpsOpts ? { https: httpsOpts } : {}),
   },
-  plugins: [
-    react(),
-    mkcert(),
-  ],
+  plugins: [react(), mkcert()],
 })

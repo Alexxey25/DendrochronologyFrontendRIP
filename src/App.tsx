@@ -1,5 +1,4 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { GITHUB_PAGES_REPO_SLUG } from './config/githubPages'
 import { ROUTES } from './Routes'
 import ConstructionsPage from './pages/ConstructionsPage/ConstructionsPage'
 import ConstructionPage from './pages/ConstructionPage/ConstructionPage'
@@ -10,9 +9,16 @@ import DendrochronologyApplicationsPage from './pages/DendrochronologyApplicatio
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css'
 
+function routerBasename(): string | undefined {
+  const b = import.meta.env.BASE_URL ?? '/'
+  if (b === '/') return undefined
+  const trimmed = b.endsWith('/') ? b.slice(0, -1) : b
+  return trimmed === '' ? undefined : trimmed
+}
+
 function App() {
   return (
-    <BrowserRouter basename={`/${GITHUB_PAGES_REPO_SLUG}`}>
+    <BrowserRouter basename={routerBasename()}>
       <Routes>
         <Route path="/" element={<Navigate to={ROUTES.CONSTRUCTIONS} replace />} />
         <Route path={ROUTES.CONSTRUCTIONS} element={<ConstructionsPage />} />
