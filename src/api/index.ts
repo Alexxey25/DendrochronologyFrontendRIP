@@ -1,7 +1,8 @@
 import { Api } from './Api'
+import { resolveApiBaseUrl } from '../config/apiBaseUrl'
 
 export const api = new Api({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',
+  baseURL: resolveApiBaseUrl(),
   withCredentials: true,
 })
 

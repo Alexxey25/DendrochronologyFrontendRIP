@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { resolveApiBaseUrl } from '../config/apiBaseUrl'
 
 export const apiHttp = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',
+  baseURL: resolveApiBaseUrl(),
   withCredentials: true,
   headers: {
     Accept: 'application/json',
