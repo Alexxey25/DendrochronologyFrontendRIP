@@ -3,9 +3,3 @@ dist
 dev-dist
 .vite
 *.local
-
-# П. 3 PWA.md (mkcert): не коммитить ключи и сертификаты
-cert.key
-cert.crt
-ca.key
-ca.crt
