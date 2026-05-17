@@ -23,6 +23,7 @@
   height: 640px;
   border-radius: 20px;
   overflow: hidden;
+  background: #000;
 }
 
 .product-video {

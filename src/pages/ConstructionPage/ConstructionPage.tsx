@@ -10,6 +10,7 @@ import {
   addConstructionToDendrochronology,
   fetchDendrochronologyDetail,
 } from '../../store/slices/dendrochronologySlice'
+import { useSeamlessVideoLoop } from '../../hooks/useSeamlessVideoLoop'
 import defaultImage from '../../assets/constructions/default_image.jpg'
 import './ConstructionPage.css'
 
@@ -33,6 +34,7 @@ export default function ConstructionPage() {
   const [construction, setConstruction] = useState<Construction | undefined>()
   const [isLoading, setIsLoading] = useState(true)
   const [videoSrc, setVideoSrc] = useState('')
+  const [hidePoster, setHidePoster] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const detailFetchOnceForCartRef = useRef<number | null>(null)
 
@@ -42,15 +44,11 @@ export default function ConstructionPage() {
   }, [construction])
 
   useEffect(() => {
+    setHidePoster(false)
     setVideoSrc(primaryVideoSrc)
   }, [primaryVideoSrc])
 
-  useEffect(() => {
-    const el = videoRef.current
-    if (!el || !videoSrc) return
-    el.muted = true
-    void el.play().catch(() => {})
-  }, [videoSrc])
+  useSeamlessVideoLoop(videoRef, videoSrc)
 
   useEffect(() => {
     if (!id) return
@@ -117,11 +115,8 @@ export default function ConstructionPage() {
   const handleVideoError = () => {
     const fallback = fallbackVideoUrl()
     if (videoSrc !== fallback) {
-      console.warn('[ConstructionPage] видео MinIO недоступно, запасной URL:', fallback)
       setVideoSrc(fallback)
-      return
     }
-    console.warn('[ConstructionPage] видео не воспроизводится:', videoSrc)
   }
 
   if (isLoading) {
@@ -164,20 +159,16 @@ export default function ConstructionPage() {
           {videoSrc ? (
             <video
               ref={videoRef}
-              key={videoSrc}
               src={videoSrc}
               autoPlay
               muted
-              loop
               playsInline
               preload="auto"
               className="product-video"
-              poster={construction.image_url || defaultImage}
-              onLoadedData={() => {
-                if (import.meta.env.DEV) {
-                  console.info('[ConstructionPage] video playing:', videoSrc)
-                }
-              }}
+              poster={
+                hidePoster ? undefined : construction.image_url || defaultImage
+              }
+              onPlaying={() => setHidePoster(true)}
               onError={handleVideoError}
             />
           ) : null}
