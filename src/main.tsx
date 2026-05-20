@@ -1,8 +1,11 @@
+import { configureTauriCorsFetch } from './config/corsFetchTauri'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './App'
 import { store } from './store'
+
+configureTauriCorsFetch()
 
 //монтирует React приложение в DOM-элемент с id='root'
 ReactDOM.createRoot(document.getElementById('root')!).render(

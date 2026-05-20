@@ -21,6 +21,7 @@ export function useClipConstructionSearch(constructions: Construction[]) {
   const previewUrlRef = useRef<string | null>(null)
 
   const [isModelReady, setIsModelReady] = useState(false)
+  const [modelError, setModelError] = useState<string | null>(null)
   const [isIndexing, setIsIndexing] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
@@ -46,6 +47,7 @@ export function useClipConstructionSearch(constructions: Construction[]) {
 
       switch (message.type) {
         case 'ready':
+          setModelError(null)
           setIsModelReady(true)
           break
         case 'text_embeddings_ready':
@@ -57,10 +59,20 @@ export function useClipConstructionSearch(constructions: Construction[]) {
           setIsSearching(false)
           break
         case 'error':
+          console.error('[CLIP]', message.data)
+          setModelError(message.data)
           setIsSearching(false)
           setIsIndexing(false)
           break
       }
+    }
+
+    worker.onerror = (event) => {
+      const detail = event.message || 'CLIP worker crashed'
+      console.error('[CLIP]', detail, event)
+      setModelError(detail)
+      setIsSearching(false)
+      setIsIndexing(false)
     }
 
     worker.postMessage({ type: 'init' })
@@ -172,6 +184,7 @@ export function useClipConstructionSearch(constructions: Construction[]) {
     selectedImageUrl,
     imageSearchActive: imageEmbedding !== null,
     isModelReady,
+    modelError,
     isIndexing,
     isSearching,
     bestSimilarityScore,

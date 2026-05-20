@@ -32,6 +32,16 @@
   color: #1f1f1f;
 }
 
+.clip-search-panel__status {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  color: #5c4a32;
+}
+
+.clip-search-panel__status--error {
+  color: #a33;
+}
+
 .clip-search-panel__subtitle {
   margin: 8px 0 0;
   max-width: 680px;

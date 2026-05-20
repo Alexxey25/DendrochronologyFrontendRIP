@@ -6,13 +6,10 @@ import { apiOrigin } from './backendConstants'
  * - production + Tauri: прямой `apiOrigin`, прокси нет.
  */
 export function resolveApiBaseUrl(): string {
-  const fromEnv = import.meta.env.VITE_API_BASE_URL
-  if (fromEnv != null && fromEnv !== '') return fromEnv
+  const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim()
+  if (fromEnv) return fromEnv
   if (import.meta.env.DEV) {
     return '/api'
   }
-  if (import.meta.env.TAURI_ENV_PLATFORM) {
-    return `${apiOrigin}/api`
-  }
-  return '/api'
+  return `${apiOrigin}/api`
 }

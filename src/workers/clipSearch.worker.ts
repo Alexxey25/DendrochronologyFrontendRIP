@@ -10,6 +10,7 @@ import { CLIP_MODEL_ID } from '../modules/constructionClip'
 
 env.allowLocalModels = false
 env.allowRemoteModels = true
+env.useBrowserCache = true
 
 type IndexPayload = Array<{
   id: number
@@ -22,6 +23,7 @@ type WorkerIncomingMessage =
   | { type: 'search_image'; data: Blob }
 
 class ClipService {
+  private static initPromise: Promise<void> | null = null
   private static tokenizer: Awaited<ReturnType<typeof AutoTokenizer.from_pretrained>> | null = null
   private static processor: Awaited<ReturnType<typeof AutoProcessor.from_pretrained>> | null = null
   private static textModel:
@@ -36,6 +38,14 @@ class ClipService {
       return
     }
 
+    if (!this.initPromise) {
+      this.initPromise = this.loadModels()
+    }
+
+    await this.initPromise
+  }
+
+  private static async loadModels() {
     const modelOptions = {
       device: 'wasm',
       quantized: true,
@@ -98,38 +108,42 @@ function toErrorMessage(error: unknown): string {
   return 'Unknown CLIP worker error'
 }
 
-self.addEventListener('message', async (event: MessageEvent<WorkerIncomingMessage>) => {
-  const { type } = event.data
+let messageQueue = Promise.resolve()
 
-  try {
-    if (type === 'init') {
-      await ClipService.init()
-      self.postMessage({ type: 'ready' })
-      return
-    }
-
-    if (type === 'index_text') {
-      const embeddings = await ClipService.indexText(event.data.data)
-
-      self.postMessage({
-        type: 'text_embeddings_ready',
-        data: embeddings,
-      })
-      return
-    }
-
-    if (type === 'search_image') {
-      const embedding = await ClipService.embedImage(event.data.data)
-
-      self.postMessage({
-        type: 'image_embedding_ready',
-        data: embedding,
-      })
-    }
-  } catch (error) {
+self.addEventListener('message', (event: MessageEvent<WorkerIncomingMessage>) => {
+  messageQueue = messageQueue.then(() => handleMessage(event.data)).catch((error: unknown) => {
     self.postMessage({
       type: 'error',
       data: toErrorMessage(error),
     })
-  }
+  })
 })
+
+async function handleMessage(message: WorkerIncomingMessage) {
+  const { type } = message
+
+  if (type === 'init') {
+    await ClipService.init()
+    self.postMessage({ type: 'ready' })
+    return
+  }
+
+  if (type === 'index_text') {
+    const embeddings = await ClipService.indexText(message.data)
+
+    self.postMessage({
+      type: 'text_embeddings_ready',
+      data: embeddings,
+    })
+    return
+  }
+
+  if (type === 'search_image') {
+    const embedding = await ClipService.embedImage(message.data)
+
+    self.postMessage({
+      type: 'image_embedding_ready',
+      data: embedding,
+    })
+  }
+}

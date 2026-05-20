@@ -36,7 +36,7 @@ export default function ConstructionsPage() {
     selectedImageUrl,
     imageSearchActive,
     isModelReady,
-    isIndexing,
+    modelError,
     isSearching,
     bestSimilarityScore,
     threshold,
@@ -129,6 +129,11 @@ export default function ConstructionsPage() {
         <div className="clip-search-panel__header">
           <p className="clip-search-panel__title">AI поиск конструкций</p>
           <p className="clip-search-panel__subtitle">Загрузите фото, чтобы найти похожие конструкции.</p>
+          {modelError ? (
+            <p className="clip-search-panel__status clip-search-panel__status--error" role="alert">
+              Модель CLIP не загрузилась: {modelError}
+            </p>
+          ) : null}
         </div>
 
         <div className="clip-search-panel__body">
@@ -154,7 +159,7 @@ export default function ConstructionsPage() {
                 type="button"
                 className="clip-search-panel__btn clip-search-panel__btn--primary"
                 onClick={() => fileInputRef.current?.click()}
-                disabled={!isModelReady || isIndexing || isSearching}
+                disabled={!isModelReady || isSearching}
               >
                 {isSearching ? 'Поиск…' : 'Загрузить фото'}
               </button>
