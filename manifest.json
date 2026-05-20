@@ -2,8 +2,8 @@
   "name": "ЮРДИС — Дендрохронологический анализ",
   "short_name": "ЮРДИС",
   "description": "Сервис дендрохронологического анализа деревянных конструкций",
-  "start_url": "/DendrochronologyFrontendRIP/",
-  "scope": "/DendrochronologyFrontendRIP/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#fdfdfd",
   "theme_color": "#a27d4b",
@@ -11,12 +11,12 @@
   "lang": "ru",
   "icons": [
     {
-      "src": "/DendrochronologyFrontendRIP/pwa-192.png",
+      "src": "./pwa-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/DendrochronologyFrontendRIP/pwa-512.png",
+      "src": "./pwa-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
