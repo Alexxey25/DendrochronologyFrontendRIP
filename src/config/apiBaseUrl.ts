@@ -6,10 +6,11 @@ import { apiOrigin } from './backendConstants'
  * - production + Tauri: прямой `apiOrigin`, прокси нет.
  */
 export function resolveApiBaseUrl(): string {
-  const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim()
-  if (fromEnv) return fromEnv
+  // dev / tauri dev: Vite-прокси /api (иначе .env.production.local уводит на мёртвый :8080 Windows)
   if (import.meta.env.DEV) {
     return '/api'
   }
+  const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim()
+  if (fromEnv) return fromEnv
   return `${apiOrigin}/api`
 }

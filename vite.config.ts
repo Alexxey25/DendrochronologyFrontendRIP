@@ -3,26 +3,25 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { API_PORT } from './src/config/backendHost'
 
-function resolveProxyHost(env: Record<string, string>): string {
+function wslIpSync(): string | null {
+  if (process.platform !== 'win32') return null
+  try {
+    const out = execSync('wsl.exe hostname -I', { encoding: 'utf8', timeout: 5000 }).trim()
+    return out.split(/\s+/).find(Boolean) ?? null
+  } catch {
+    return null
+  }
+}
+
+function resolveProxyHostSync(env: Record<string, string>): string {
   const fromEnv = env.VITE_PROXY_BACKEND_HOST?.trim()
   if (fromEnv) return fromEnv
-
-  if (process.platform === 'win32') {
-    try {
-      const out = execSync('wsl.exe hostname -I', { encoding: 'utf8', timeout: 5000 }).trim()
-      const ip = out.split(/\s+/).find(Boolean)
-      if (ip) return ip
-    } catch {
-      /* wsl unavailable */
-    }
-  }
-
-  return '127.0.0.1'
+  return wslIpSync() ?? '127.0.0.1'
 }
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const proxyHost = resolveProxyHost(env)
+  const proxyHost = resolveProxyHostSync(env)
   const backendApiOrigin = `http://${proxyHost}:${API_PORT}`
 
   return {
@@ -37,7 +36,7 @@ export default defineConfig(({ command, mode }) => {
         '/api': {
           target: backendApiOrigin,
           changeOrigin: true,
-          secure: false,
+          // secure: false, // для https-таргета; Tauri — только http:// бэкенд
         },
       },
       watch: {
@@ -51,7 +50,7 @@ export default defineConfig(({ command, mode }) => {
         '/api': {
           target: backendApiOrigin,
           changeOrigin: true,
-          secure: false,
+          // secure: false,
         },
       },
     },
