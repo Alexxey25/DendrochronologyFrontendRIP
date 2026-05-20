@@ -1,6 +1,7 @@
 import { CONSTRUCTIONS_MOCK } from './mock'
 import { apiHttp } from '../api/http'
-import { minioConstructionBaseUrl } from '../config/apiConstants'
+import { resolveMinioConstructionBase } from './apiUrl'
+import { shouldUseMockOnly } from '../config/pagesRuntime'
 
 export interface Construction {
   id: number
@@ -24,26 +25,18 @@ interface ConstructionResponseDto {
   is_delete: boolean
 }
 
-const API_BASE_URL = '/api'
-const MINIO_PREVIEW_BASE_URL = minioConstructionBaseUrl
+function minioBase(): string {
+  return resolveMinioConstructionBase().replace(/\/constructions\/?$/, '')
+}
 
 function normalizeMediaUrl(value: string): string {
   if (!value) return ''
+  const base = `${minioBase()}/constructions`
   if (value.startsWith('http://') || value.startsWith('https://')) {
-    if (import.meta.env.DEV) {
-      try {
-        const path = new URL(value).pathname
-        if (path.startsWith('/constructions')) {
-          return path
-        }
-      } catch {
-        /* ignore */
-      }
-    }
     return value
   }
-  if (value.startsWith('/')) return `${MINIO_PREVIEW_BASE_URL}${value}`
-  return `${MINIO_PREVIEW_BASE_URL}/${value}`
+  if (value.startsWith('/')) return `${base}${value}`
+  return `${base}/${value}`
 }
 
 function normalizeConstruction(dto: ConstructionResponseDto): Construction {
@@ -70,26 +63,32 @@ function filterMockConstructions(query: string): Construction[] {
 }
 
 export async function fetchConstructions(query = ''): Promise<Construction[]> {
+  if (shouldUseMockOnly()) {
+    return filterMockConstructions(query)
+  }
+
   try {
     const searchParams = new URLSearchParams()
     if (query.trim()) {
       searchParams.set('query', query.trim())
     }
 
-    const url = `${API_BASE_URL}/constructions${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
-    const response = await apiHttp.get<ConstructionResponseDto[]>(url.replace(API_BASE_URL, ''))
-    const data = response.data
-    return data.map(normalizeConstruction).filter((construction) => !construction.is_delete)
+    const path = `/constructions${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
+    const response = await apiHttp.get<ConstructionResponseDto[]>(path)
+    return response.data.map(normalizeConstruction).filter((construction) => !construction.is_delete)
   } catch {
     return filterMockConstructions(query)
   }
 }
 
 export async function fetchConstructionById(id: number): Promise<Construction | undefined> {
+  if (shouldUseMockOnly()) {
+    return CONSTRUCTIONS_MOCK.find((construction) => construction.id === id)
+  }
+
   try {
     const response = await apiHttp.get<ConstructionResponseDto>(`/constructions/${id}`)
-    const data = response.data
-    return normalizeConstruction(data)
+    return normalizeConstruction(response.data)
   } catch {
     return CONSTRUCTIONS_MOCK.find((construction) => construction.id === id)
   }

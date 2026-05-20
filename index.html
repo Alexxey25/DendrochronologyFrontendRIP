@@ -14,6 +14,34 @@
     <link rel="apple-touch-icon" href="pwa-192.png" />
     <link rel="manifest" href="manifest.json" />
     <title>ЮРДИС — Дендрохронологический анализ</title>
+    <script>
+      (function () {
+        var fromStorage = ''
+        var minioFromStorage = ''
+        try {
+          fromStorage = String(localStorage.getItem('rip.apiOrigin') || '').replace(/\/$/, '')
+        } catch (e0) {}
+        try {
+          minioFromStorage = String(localStorage.getItem('rip.minioBase') || '').replace(/\/$/, '')
+        } catch (e01) {}
+        window.__RUNTIME_API_ORIGIN__ = fromStorage
+        window.__RUNTIME_MINIO_BASE__ = minioFromStorage
+        if (!window.__RUNTIME_API_ORIGIN__) {
+          try {
+            var x = new XMLHttpRequest()
+            x.open('GET', 'runtime-config.json', false)
+            x.send(null)
+            if (x.status >= 200 && x.status < 300 && x.responseText) {
+              var j = JSON.parse(x.responseText)
+              if (j && typeof j.apiOrigin === 'string')
+                window.__RUNTIME_API_ORIGIN__ = String(j.apiOrigin).replace(/\/$/, '')
+              if (j && typeof j.minioOrigin === 'string')
+                window.__RUNTIME_MINIO_BASE__ = String(j.minioOrigin).replace(/\/$/, '')
+            }
+          } catch (e2) {}
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

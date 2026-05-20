@@ -6,8 +6,7 @@ import { GITHUB_PAGES_REPO_SLUG } from './src/config/githubPages'
 import {
   API_PORT,
   LOCAL_BACKEND_HOST,
-  MINIO_PORT,
-  ZEROTIER_HOST,
+  ZEROTIER_PC_HOST,
 } from './src/config/backendHost'
 
 function resolveDevBackendHost(): string {
@@ -29,7 +28,6 @@ function resolveDevBackendHost(): string {
 
 const devBackendHost = resolveDevBackendHost()
 const backendApiOrigin = `http://${devBackendHost}:${API_PORT}`
-const minioOrigin = `http://${devBackendHost}:${MINIO_PORT}`
 
 const isProdBuild = process.env.NODE_ENV === 'production'
 const base = !isProdBuild ? '/' : `/${GITHUB_PAGES_REPO_SLUG}/`
@@ -46,21 +44,23 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      '/constructions': {
-        target: minioOrigin,
-        changeOrigin: true,
-        secure: false,
-      },
     },
   },
   preview: {
     host: true,
     port: 4173,
+    proxy: {
+      '/api': {
+        target: backendApiOrigin,
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   plugins: [
     react(),
     mkcert({
-      hosts: ['localhost', '127.0.0.1', ZEROTIER_HOST],
+      hosts: ['localhost', '127.0.0.1', ZEROTIER_PC_HOST],
     }),
   ],
 })
